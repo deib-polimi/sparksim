@@ -1,0 +1,95 @@
+EDFPure - 300
+eA = 0.2%
+eD = 0.0%
+Violations = 0.0%
+Scenario Violations = 54.3%
+Unfeasibles = 45.0%
+Non Violations = 0.7%
+
+EDFAll - 300
+eA = 48.3%
+eD = 0.0%
+Violations = 0.0%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 100.0%
+
+FIFO - 300
+eA = 49.3%
+eD = 6.7%
+Violations = 62.2%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.8%
+
+Fair - 300
+eA = 39.3%
+eD = 6.6%
+Violations = 62.3%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.7%
+
+EDFPure - 510
+eA = 0.4%
+eD = 0.0%
+Violations = 2.7%
+Scenario Violations = 23.1%
+Unfeasibles = 11.5%
+Non Violations = 62.7%
+
+EDFAll - 510
+eA = 48.3%
+eD = 0.0%
+Violations = 0.0%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 100.0%
+
+FIFO - 510
+eA = 49.3%
+eD = 6.7%
+Violations = 62.2%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.8%
+
+Fair - 510
+eA = 39.3%
+eD = 6.6%
+Violations = 62.3%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.7%
+
+EDFPure - 720
+eA = 0.5%
+eD = 0.1% (ceil di 0.028945170%)
+Violations = 2.6%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 97.4%
+
+EDFAll - 720
+eA = 48.3%
+eD = 0.0%
+Violations = 0.0%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 100.0%
+
+FIFO - 720
+eA = 49.3%
+eD = 6.7%
+Violations = 62.2%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.8%
+
+Fair - 720
+eA = 39.3%
+eD = 6.6%
+Violations = 62.3%
+Scenario Violations = 0.0%
+Unfeasibles = 0.0%
+Non Violations = 37.7%

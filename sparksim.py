@@ -73,14 +73,48 @@ class Spark:
                 return True
         return False
 
+    def computeViolations(self, apps, steps):
+        for app in apps:
+            if app in self.ended and self.ended[app][1] - self.ended[app][0] > app.deadline:
+                return True
+        return False
+
+    def computeScenarioViolations(self, apps, steps):
+        if self.computeViolations(apps, steps) or self.computeUnfisibility(apps, steps):
+            return False
+        for app in apps:
+            if app not in self.ended and app in self.running and self.running[app][0]+app.duration <= steps:
+                return True
+        return False
+
+    def computeUnfisibility(self, apps, steps):
+        if self.computeViolations(apps, steps):
+            return False
+        for app in apps:
+            if app not in self.ended and app not in self.running:
+                return True
+            if app not in self.ended and app in self.running and self.running[app][0]+app.duration > steps:
+                return True
+        return False
+
+    def computeNonViolations(self, apps, steps):
+        return not self.computeViolations(apps, steps) \
+                and not self.computeScenarioViolations(apps, steps) \
+                and not self.computeUnfisibility(apps, steps)
+
     def __repr__(self):
         return "r:%s, e:%s\n" % (self.running, self.ended)
 
     def error(self, apps):
-        e = 0.0
+        eA = eD = 0.0
         for app, value in self.ended.items():
-            e += float(abs(self.ended[app][1] - self.ended[app][0] - app.deadline))/float(app.deadline)
-        return e / len(apps)
+            e = float(app.deadline - (self.ended[app][1] - self.ended[app][0])) / float(app.deadline)
+            if e < 0:
+                eD += abs(e)
+            else:
+                eA += e
+        return eA/len(apps), eD/len(apps)
+
 
 def nextStates(apps, state, time):
     if not apps:
@@ -92,24 +126,24 @@ def nextStates(apps, state, time):
         return nextStates(apps[1:], state.schedule(app, time), time) | nextStates(apps[1:], state, time)
 
 
-def simulate(initial, apps):
-    print(initial.scheduler.__class__.__name__)
-    steps = sum(map(lambda a: a.deadline, apps))
+def simulate(initial, apps, steps):
+    print(initial.scheduler.__class__.__name__, "-", steps)
     states = {initial}
     for t in range(0, steps+1, 1):
         newStates = set()
         for state in states:
              newStates |= nextStates(apps,state.tick(t), t)
-        print(t, len(newStates))
+        #print(t, len(newStates))
         states = newStates
 
-    violations = list(filter(lambda s: s.hasViolations(apps, steps), states))
-    nonViolations = list(filter(lambda s: not s.hasViolations(apps, steps), states))
-    if not nonViolations:
-        print("Error = 0%")
-    else:
-        error = sum(map(lambda s: s.error(apps), nonViolations))/len(nonViolations)
-        print("Error = %.1f%%" % (error*100, ))
 
-    violations = len(violations)/len(states)*100
-    print("Violations = %.1f%%" % violations)
+    eA = sum(map(lambda s: s.error(apps)[0], states))/len(states)
+    eD = sum(map(lambda s: s.error(apps)[1], states))/len(states)
+    print("eA = %.1f%%\neD = %.9f%%" % (eA*100, eD*100))
+
+    violations = len([s for s in states if s.computeViolations(apps, steps)])/len(states)*100
+    scenarioViolations = len([s for s in states if s.computeScenarioViolations(apps, steps)])/len(states)*100
+    unfisibles = len([s for s in states if s.computeUnfisibility(apps, steps)])/len(states)*100
+    nonViolations = len([s for s in states if s.computeNonViolations(apps, steps)])/len(states)*100
+    print("Violations = %.1f%%\nScenario Violations = %.1f%%\nUnfisibles = %.1f%%\nNon Violations = %.1f%%" \
+            % (violations, scenarioViolations, unfisibles, nonViolations))
